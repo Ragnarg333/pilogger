@@ -1,0 +1,2 @@
+#!/bin/bash
+ docker run --rm --detach -p 8080:80 --mount type=volume,src=var_www_html,target=/var/www/html --mount type=volume,src=var_lib_mysql,target=/var/lib/mysql --name pilogger lamp-cacti-1m /root/start-daemons
