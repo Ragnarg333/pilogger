@@ -1,0 +1,22 @@
+# Update crontab, remove autostart
+crontab -l |grep -v start_container |crontab -
+
+# Stop running version and save it to tgz
+docker ps -a |grep lamp-cacti| cut -f1 -d ' '| xargs docker stop
+docker save lamp-cacti-1m |gzip -9 >lamp-cacti-1m.tgz
+
+# pack files
+cd /var/lib/docker/volumes
+tar zcvf var_www_html.tgz var_www_html/
+tar zcvf var_lib_mysql.tgz var_lib_mysql/
+mv *.tgz /root/pilogger/
+
+#split large files
+split -b 50M lamp-cacti-1m.tgz lamp-cacti-1m.
+split -b 50M var_www_html.tgz var_www_html.
+
+
+# Update crontab, add autostart
+crontab -l > /tmp/crontab-pilogger
+echo "* * * * * /root/pilogger/start_container >/dev/null 2>&1" >> /tmp/crontab-pilogger
+cat /tmp/crontab-pilogger | crontab -
