@@ -1,0 +1,4 @@
+cat lamp-cacti-1m.a[a-z] | gzip -d |docker load
+cd /var/lib/docker/volumes
+tar zxvf /root/pilogger/var_lib_mysql.tgz 
+cat /root/pilogger/var_www_html.a[a-z] | tar zxvf -
