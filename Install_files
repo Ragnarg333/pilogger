@@ -1,4 +1,14 @@
+# Stop running version and remove image
+docker ps -a |grep lamp-cacti| cut -f1 -d ' '| xargs docker stop
+docker images |grep lamp-cacti |cut -b 25-35 |xargs docker image remove
+
+# Unpack files
 cat lamp-cacti-1m.a[a-z] | gzip -d |docker load
 cd /var/lib/docker/volumes
 tar zxvf /root/pilogger/var_lib_mysql.tgz 
-cat /root/pilogger/var_www_html.a[a-z] | tar zxvf -
+cat /root/pilogger/var_www_html.a[a-z] | tar --keep-newer-files -zxvf -
+
+# Update crontab
+crontab -l |grep -v start_container > /tmp/crontab-pilogger
+echo "* * * * * /root/pilogger/start_container >/dev/null 2>&1" >> /tmp/crontab-pilogger
+cat /tmp/crontab-pilogger | crontab -
