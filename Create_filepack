@@ -12,6 +12,7 @@ tar zcvf var_lib_mysql.tgz var_lib_mysql/
 mv *.tgz /root/pilogger/
 
 #split large files
+cd /root/pilogger
 split -b 50M lamp-cacti-1m.tgz lamp-cacti-1m.
 split -b 50M var_www_html.tgz var_www_html.
 
